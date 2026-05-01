@@ -1,0 +1,5 @@
+tester: Team BazaarPK
+execution_time: 2026-05-01 12:45
+environment: Windows 10 + Chrome 147
+status: Pass
+observation: Screenshot captured for TC-07

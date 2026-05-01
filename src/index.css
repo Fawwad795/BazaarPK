@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-primary-700: #15803d;
+  --color-primary-800: #166534;
+  --color-primary-900: #14532d;
+
+  --color-secondary-50: #faf5ff;
+  --color-secondary-100: #f3e8ff;
+  --color-secondary-200: #e9d5ff;
+  --color-secondary-300: #d8b4fe;
+  --color-secondary-400: #c084fc;
+  --color-secondary-500: #a855f7;
+  --color-secondary-600: #9333ea;
+  --color-secondary-700: #7e22ce;
+  --color-secondary-800: #6b21a8;
+  --color-secondary-900: #581c87;
+
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+  --color-accent-800: #9a3412;
+  --color-accent-900: #7c2d12;
+
+  --color-surface-light: #ffffff;
+  --color-surface-dark: #1a1a2e;
+  --color-background-light: #f8fafc;
+  --color-background-dark: #0f0f23;
+}
+
+@layer base {
+  body {
+    @apply bg-background-light text-gray-900 dark:bg-background-dark dark:text-gray-100 transition-colors duration-300;
+  }
+
+  a,
+  button,
+  summary,
+  [role='button'],
+  input[type='button'],
+  input[type='submit'],
+  input[type='reset'] {
+    cursor: pointer;
+  }
+
+  /* Keep browser autofill aligned with app theme */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  textarea:-webkit-autofill:hover,
+  textarea:-webkit-autofill:focus,
+  select:-webkit-autofill,
+  select:-webkit-autofill:hover,
+  select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #111827;
+    -webkit-box-shadow: 0 0 0 1000px #f3f5f8 inset;
+    transition: background-color 9999s ease-out 0s;
+  }
+
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark textarea:-webkit-autofill,
+  .dark textarea:-webkit-autofill:hover,
+  .dark textarea:-webkit-autofill:focus,
+  .dark select:-webkit-autofill,
+  .dark select:-webkit-autofill:hover,
+  .dark select:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff;
+    -webkit-box-shadow: 0 0 0 1000px #131313 inset;
+  }
+}
+
+/* ── Animations ── */
+
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-12px); }
+}
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%      { transform: translateY(-8px) rotate(1deg); }
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes gradient-text {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50%      { opacity: 0.7; transform: scale(1.05); }
+}
+@keyframes blob {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%      { transform: translate(40px, -50px) scale(1.08); }
+  66%      { transform: translate(-30px, 25px) scale(0.93); }
+}
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.anim-hero     { animation: hero-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.anim-fade     { animation: hero-fade 0.6s ease-out both; }
+.anim-float    { animation: float 6s ease-in-out infinite; }
+.anim-float-d  { animation: float-delayed 8s ease-in-out infinite; }
+.anim-marquee  { animation: marquee 40s linear infinite; }
+.anim-gradient { animation: gradient-text 5s ease infinite; background-size: 200% 200%; }
+.anim-glow     { animation: glow-pulse 4s ease-in-out infinite; }
+.anim-blob     { animation: blob 10s ease-in-out infinite; }
+.anim-blob-d   { animation: blob 13s ease-in-out infinite; animation-delay: -4s; }
+.anim-blob-d2  { animation: blob 16s ease-in-out infinite; animation-delay: -8s; }
+.anim-shimmer  { animation: shimmer 2.5s ease-in-out infinite; }
+.anim-spin-slow { animation: spin-slow 20s linear infinite; }
+
+/* Stagger */
+.d1 { animation-delay: 80ms; }
+.d2 { animation-delay: 180ms; }
+.d3 { animation-delay: 280ms; }
+.d4 { animation-delay: 400ms; }
+.d5 { animation-delay: 520ms; }
+.d6 { animation-delay: 650ms; }
+.d7 { animation-delay: 800ms; }
+.d8 { animation-delay: 1000ms; }
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Gradient card border glow */
+.glow-card {
+  position: relative;
+}
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(34,197,94,0.3), rgba(168,85,247,0.3), rgba(249,115,22,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.glow-card:hover::before {
+  opacity: 1;
+}
