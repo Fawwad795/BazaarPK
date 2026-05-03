@@ -40,7 +40,7 @@ export default function LoginPage() {
     try {
       const loggedInUser = await login(formData.email, formData.password, formData.role as UserRole);
       const destination =
-        loggedInUser.role === 'admin' ? '/admin' : loggedInUser.role === 'seller' ? '/dashboard' : '/';
+        loggedInUser.role === 'admin' ? '/admin' : loggedInUser.role === 'seller' ? '/dashboard' : '/buyer';
       navigate(destination);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Login failed. Please try again.';

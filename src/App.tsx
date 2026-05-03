@@ -1,7 +1,7 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
-import BuyerDashboardPage from './pages/BuyerDashboardPage';
 import BuyerAccountPage from './pages/BuyerAccountPage';
+import BuyerDashboardPage from './pages/BuyerDashboardPage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import AddProductPage from './pages/AddProductPage';
@@ -22,6 +22,7 @@ import SellerOnboardingPage from './pages/SellerOnboardingPage';
 import CheckoutPage from './pages/CheckoutPage';
 import TrackingPage from './pages/TrackingPage';
 import DisputePage from './pages/DisputePage';
+import ProtectedRoute from './components/ProtectedRoute';
 import { useAuthStore } from './store/authStore';
 
 function AppLayout() {
@@ -29,28 +30,38 @@ function AppLayout() {
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<BuyerDashboardPage />} />
-          <Route path="/account" element={<BuyerAccountPage />} />
-          <Route path="/products" element={<ProductListingPage />} />
-          <Route path="/products/new" element={<AddProductPage />} />
-          <Route path="/products/:productId" element={<ProductDetailPage />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/orders" element={<BuyerOrdersPage />} />
-          <Route path="/tracking" element={<TrackingPage />} />
-          <Route path="/disputes" element={<DisputePage />} />
-          <Route path="/seller/onboarding" element={<SellerOnboardingPage />} />
-          <Route path="/dashboard" element={<SellerDashboardPage />} />
-          <Route path="/dashboard/orders" element={<SellerOrdersPage />} />
-          <Route path="/dashboard/orders/:orderId" element={<SellerOrderDetailsPage />} />
-          <Route path="/dashboard/analytics" element={<SellerAnalyticsPage />} />
-          <Route path="/dashboard/payments" element={<SellerPaymentsPage />} />
-          <Route path="/admin" element={<AdminPanelPage />} />
-          <Route path="/admin/seller-verification" element={<AdminSellerVerificationPage />} />
-          <Route path="/admin/disputes" element={<AdminDisputeManagementPage />} />
-          <Route path="/admin/analytics" element={<AdminPlatformAnalyticsPage />} />
+
+          {/* Buyer routes */}
+          <Route path="/buyer" element={<ProtectedRoute allowedRoles={['buyer']}><BuyerDashboardPage /></ProtectedRoute>} />
+          <Route path="/account" element={<ProtectedRoute allowedRoles={['buyer']}><BuyerAccountPage /></ProtectedRoute>} />
+          <Route path="/products" element={<ProtectedRoute allowedRoles={['buyer']}><ProductListingPage /></ProtectedRoute>} />
+          <Route path="/products/:productId" element={<ProtectedRoute allowedRoles={['buyer']}><ProductDetailPage /></ProtectedRoute>} />
+          <Route path="/cart" element={<ProtectedRoute allowedRoles={['buyer']}><CartPage /></ProtectedRoute>} />
+          <Route path="/checkout" element={<ProtectedRoute allowedRoles={['buyer']}><CheckoutPage /></ProtectedRoute>} />
+          <Route path="/orders" element={<ProtectedRoute allowedRoles={['buyer']}><BuyerOrdersPage /></ProtectedRoute>} />
+          <Route path="/tracking" element={<ProtectedRoute allowedRoles={['buyer']}><TrackingPage /></ProtectedRoute>} />
+          <Route path="/disputes" element={<ProtectedRoute allowedRoles={['buyer']}><DisputePage /></ProtectedRoute>} />
+
+          {/* Seller routes */}
+          <Route path="/seller/onboarding" element={<ProtectedRoute allowedRoles={['seller']}><SellerOnboardingPage /></ProtectedRoute>} />
+          <Route path="/products/new" element={<ProtectedRoute allowedRoles={['seller']}><AddProductPage /></ProtectedRoute>} />
+          <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['seller']}><SellerDashboardPage /></ProtectedRoute>} />
+          <Route path="/dashboard/orders" element={<ProtectedRoute allowedRoles={['seller']}><SellerOrdersPage /></ProtectedRoute>} />
+          <Route path="/dashboard/orders/:orderId" element={<ProtectedRoute allowedRoles={['seller']}><SellerOrderDetailsPage /></ProtectedRoute>} />
+          <Route path="/dashboard/analytics" element={<ProtectedRoute allowedRoles={['seller']}><SellerAnalyticsPage /></ProtectedRoute>} />
+          <Route path="/dashboard/payments" element={<ProtectedRoute allowedRoles={['seller']}><SellerPaymentsPage /></ProtectedRoute>} />
+
+          {/* Admin routes */}
+          <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminPanelPage /></ProtectedRoute>} />
+          <Route path="/admin/seller-verification" element={<ProtectedRoute allowedRoles={['admin']}><AdminSellerVerificationPage /></ProtectedRoute>} />
+          <Route path="/admin/disputes" element={<ProtectedRoute allowedRoles={['admin']}><AdminDisputeManagementPage /></ProtectedRoute>} />
+          <Route path="/admin/analytics" element={<ProtectedRoute allowedRoles={['admin']}><AdminPlatformAnalyticsPage /></ProtectedRoute>} />
+
+          {/* Catch-all: redirect unknown routes to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
     </div>

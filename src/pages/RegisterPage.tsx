@@ -72,7 +72,7 @@ export default function RegisterPage() {
 
       <header className={`relative z-10 border ${topBarBg}`}>
         <div className="mx-auto flex h-[60px] max-w-[1280px] items-center px-8">
-          <Link to="/" className={`text-[20px] font-bold ${accentText}`}>
+          <Link to="/login" className={`text-[20px] font-bold ${accentText}`}>
             BazaarPK
           </Link>
           <div className="ml-auto flex items-center gap-4">

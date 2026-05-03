@@ -37,7 +37,7 @@ export default function TrackingPage() {
       <header className={`border ${border} ${navBg}`}>
         <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center px-4 sm:px-6">
           <p className={`text-[20px] font-bold ${accent}`}>BazaarPK</p>
-          <Link to="/" className={`ml-8 text-[13px] font-medium ${sub}`}>
+          <Link to="/buyer" className={`ml-8 text-[13px] font-medium ${sub}`}>
             &lt; Back to Dashboard
           </Link>
           <button

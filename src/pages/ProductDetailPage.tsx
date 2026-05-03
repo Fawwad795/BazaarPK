@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
       <header className={`border ${borderColor} ${navBg}`}>
         <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center gap-4 px-4 sm:px-6">
           <p className={`text-[20px] font-bold ${accentText}`}>BazaarPK</p>
-          <Link to="/" className={`inline-flex items-center gap-1 text-[13px] font-medium ${subText}`}>
+          <Link to="/buyer" className={`inline-flex items-center gap-1 text-[13px] font-medium ${subText}`}>
             <ChevronLeft className="h-3.5 w-3.5" />
             Back to Products
           </Link>

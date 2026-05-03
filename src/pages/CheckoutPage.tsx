@@ -95,7 +95,7 @@ export default function CheckoutPage() {
         <h2 className={`text-2xl font-bold ${title}`}>Cart is empty</h2>
         <p className={`mt-2 ${sub}`}>Add items to your cart before checkout.</p>
         <Link
-          to="/"
+          to="/buyer"
           className={`mt-6 inline-block rounded-lg px-6 py-2.5 text-sm font-medium ${accentBg} ${accentBtnText}`}
         >
           Browse Products
@@ -181,7 +181,7 @@ export default function CheckoutPage() {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/')}
+                onClick={() => navigate('/buyer')}
                 className={`h-12 rounded-lg border text-[14px] font-medium ${border} ${chipBg} ${title}`}
               >
                 Continue Shopping
