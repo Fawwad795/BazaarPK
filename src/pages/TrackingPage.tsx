@@ -4,14 +4,16 @@ import { useThemeStore } from '../store/themeStore';
 import BuyerCartShortcut from '../components/BuyerCartShortcut';
 import BuyerTrackShortcut from '../components/BuyerTrackShortcut';
 
-const timeline = [
+type TimelineStep = { label: string; time: string; done: boolean; flag?: string };
+
+const timeline: TimelineStep[] = [
   { label: 'Order Placed', time: 'Apr 24, 2026  -  2:34 PM', done: true },
   { label: 'Payment Confirmed', time: 'Apr 24, 2026  -  2:35 PM', done: true },
   { label: 'Order Packed', time: 'Apr 25, 2026  -  10:12 AM', done: true },
   { label: 'Shipped', time: 'Apr 26, 2026  -  9:00 AM', done: true, flag: 'IN TRANSIT' },
   { label: 'Out for Delivery', time: 'Estimated Apr 28', done: false },
   { label: 'Delivered', time: 'Estimated Apr 28 - 30', done: false },
-] as const;
+];
 
 export default function TrackingPage() {
   const { isDarkMode, toggleTheme } = useThemeStore();

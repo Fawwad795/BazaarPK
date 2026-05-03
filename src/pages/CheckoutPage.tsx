@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { CheckCircle2, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useCartStore } from '../store/cartStore';
 import { formatPrice } from '../utils/helpers';
 import type { PaymentMethod } from '../types';

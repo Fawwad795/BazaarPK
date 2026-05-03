@@ -45,10 +45,9 @@ export default function BuyerDashboardPage() {
       const tags = Array.isArray((product as { tags?: string[] }).tags)
         ? ((product as { tags?: string[] }).tags as string[])
         : [];
+      const rawCat = (product as { category?: string | { name?: string } }).category;
       const category =
-        typeof product.category === 'string'
-          ? product.category
-          : (product.category?.name ?? '');
+        typeof rawCat === 'string' ? rawCat : typeof rawCat === 'object' && rawCat ? (rawCat.name ?? '') : '';
       return (
         product.title.toLowerCase().includes(query) ||
         product.seller.storeName.toLowerCase().includes(query) ||

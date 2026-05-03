@@ -25,11 +25,11 @@ function dedupeRoles(roles: UserRole[]): UserRole[] {
 }
 
 function normalizeUserProfile(user: User): User {
-  const inferredRoles =
+  const inferredRoles: UserRole[] =
     user.roles && user.roles.length > 0
       ? user.roles
       : user.role === 'seller'
-        ? ['buyer', 'seller']
+        ? (['buyer', 'seller'] as UserRole[])
         : [user.role];
   const normalizedRoles = dedupeRoles(inferredRoles);
   const normalizedActiveRole = normalizedRoles.includes(user.lastActiveRole as UserRole)
