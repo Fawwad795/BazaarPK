@@ -50,7 +50,7 @@ export default function ProductDetailPage() {
           The product you&apos;re looking for doesn&apos;t exist.
         </p>
         <Link
-          to="/products"
+          to="/buyer"
           className="mt-6 inline-block rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
         >
           Browse Products

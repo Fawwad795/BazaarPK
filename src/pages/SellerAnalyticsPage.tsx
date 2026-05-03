@@ -63,7 +63,7 @@ export default function SellerAnalyticsPage() {
     { label: 'Orders', action: () => navigate('/dashboard/orders') },
     { label: 'Analytics', action: () => navigate('/dashboard/analytics') },
     { label: 'Payments', action: () => navigate('/dashboard/payments') },
-    { label: 'Support', action: () => navigate('/chat') },
+    { label: 'Support', action: () => {}, disabled: true },
     {
       label: 'Log Out',
       action: async () => {
@@ -122,11 +122,14 @@ export default function SellerAnalyticsPage() {
                 <button
                   key={item.label}
                   type="button"
+                  disabled={item.disabled}
                   onClick={() => void item.action()}
                   className={`relative h-10 rounded-lg px-4 text-left text-[13px] font-medium leading-10 transition ${
-                    active
-                      ? `${isLight ? 'bg-[#eef0f4] text-[#111827]' : 'bg-[#222] text-white'}`
-                      : `${subColor} hover:${isLight ? 'bg-[#eef0f4]' : 'bg-[#222]'}`
+                    item.disabled
+                      ? `${isLight ? 'text-[#c5c9d0]' : 'text-[#333]'} cursor-not-allowed`
+                      : active
+                        ? `${isLight ? 'bg-[#eef0f4] text-[#111827]' : 'bg-[#222] text-white'}`
+                        : `${subColor} hover:${isLight ? 'bg-[#eef0f4]' : 'bg-[#222]'}`
                   }`}
                 >
                   {active && <span className={`absolute left-0 top-2 h-6 w-[3px] rounded-sm ${accentBg}`} />}

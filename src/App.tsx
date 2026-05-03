@@ -37,7 +37,6 @@ function AppLayout() {
           {/* Buyer routes */}
           <Route path="/buyer" element={<ProtectedRoute allowedRoles={['buyer']}><BuyerDashboardPage /></ProtectedRoute>} />
           <Route path="/account" element={<ProtectedRoute allowedRoles={['buyer']}><BuyerAccountPage /></ProtectedRoute>} />
-          <Route path="/products" element={<ProtectedRoute allowedRoles={['buyer']}><ProductListingPage /></ProtectedRoute>} />
           <Route path="/products/:productId" element={<ProtectedRoute allowedRoles={['buyer']}><ProductDetailPage /></ProtectedRoute>} />
           <Route path="/cart" element={<ProtectedRoute allowedRoles={['buyer']}><CartPage /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute allowedRoles={['buyer']}><CheckoutPage /></ProtectedRoute>} />
@@ -47,6 +46,7 @@ function AppLayout() {
 
           {/* Seller routes */}
           <Route path="/seller/onboarding" element={<ProtectedRoute allowedRoles={['seller']}><SellerOnboardingPage /></ProtectedRoute>} />
+          <Route path="/products" element={<ProtectedRoute allowedRoles={['seller']}><ProductListingPage /></ProtectedRoute>} />
           <Route path="/products/new" element={<ProtectedRoute allowedRoles={['seller']}><AddProductPage /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['seller']}><SellerDashboardPage /></ProtectedRoute>} />
           <Route path="/dashboard/orders" element={<ProtectedRoute allowedRoles={['seller']}><SellerOrdersPage /></ProtectedRoute>} />

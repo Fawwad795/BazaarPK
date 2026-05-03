@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Moon, Search, Sun, Star } from 'lucide-react';
+import { Check, Moon, Search, Sun, Star } from 'lucide-react';
 import { useThemeStore } from '../store/themeStore';
 import { useAuthStore } from '../store/authStore';
 import { useProductStore } from '../store/productStore';
 import { useCartStore } from '../store/cartStore';
 import { formatPrice } from '../utils/helpers';
+import type { Product } from '../types';
 import BuyerCartShortcut from '../components/BuyerCartShortcut';
 import BuyerTrackShortcut from '../components/BuyerTrackShortcut';
 
@@ -13,7 +14,7 @@ export default function BuyerDashboardPage() {
   const { isDarkMode, toggleTheme } = useThemeStore();
   const { user } = useAuthStore();
   const { products } = useProductStore();
-  const { totalItems } = useCartStore();
+  const { items: cartItems, addToCart, removeFromCart, totalItems } = useCartStore();
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,41 +22,63 @@ export default function BuyerDashboardPage() {
   const categories = ['Clothing', 'Handicrafts', 'Electronics', 'Home Decor', 'Jewelry', 'Spices'];
   const filters = ['All', 'Verified', 'Under Rs.1000', 'Rs.1k-5k', 'Free Delivery', 'New Arrivals', 'Top Rated'];
 
-  const displayedProducts = useMemo(() => {
+  const fallbackDefaults: Pick<Product, 'description' | 'images' | 'category' | 'stock' | 'tags' | 'createdAt' | 'isFeatured'> = { description: '', images: [], category: { id: '', name: '', slug: '', icon: '' }, stock: 10, tags: [], createdAt: '', isFeatured: false };
+  const displayedProducts: Product[] = useMemo(() => {
     const base = (products.length ? products : []).slice(0, 8);
     if (!base.length) {
       return [
-        { id: 'p1', title: 'Embroidered Kurta', seller: { storeName: 'Lahore Fashion Co.' }, rating: 4.8, reviewCount: 128, price: 2450, originalPrice: 3200 },
-        { id: 'p2', title: 'Handwoven Rug', seller: { storeName: 'Multan Handicrafts' }, rating: 4.9, reviewCount: 128, price: 8900, originalPrice: 12000 },
-        { id: 'p3', title: 'Wireless Earbuds', seller: { storeName: 'TechHub Karachi' }, rating: 4.6, reviewCount: 128, price: 3499, originalPrice: 4999 },
-        { id: 'p4', title: 'Silver Jhumka Set', seller: { storeName: 'Lahore Jewels' }, rating: 4.7, reviewCount: 128, price: 1850, originalPrice: 2500 },
-        { id: 'p5', title: 'Truck Art Mug', seller: { storeName: 'Peshawar Crafts' }, rating: 4.5, reviewCount: 128, price: 750, originalPrice: 1000 },
-        { id: 'p6', title: 'Sindhi Ajrak Shawl', seller: { storeName: 'Hyderabad Weavers' }, rating: 4.9, reviewCount: 128, price: 1950, originalPrice: 2800 },
-        { id: 'p7', title: 'Brass Diya Set', seller: { storeName: 'Islamabad Traditions' }, rating: 4.4, reviewCount: 128, price: 1100, originalPrice: 1500 },
-        { id: 'p8', title: 'Kashmiri Dry Fruits', seller: { storeName: 'Gilgit Organics' }, rating: 4.8, reviewCount: 128, price: 2299, originalPrice: 2999 },
+        { ...fallbackDefaults, id: 'p1', title: 'Embroidered Kurta', seller: { id: 's1', storeName: 'Lahore Fashion Co.', rating: 4.8, avatar: '' }, rating: 4.8, reviewCount: 128, price: 2450, originalPrice: 3200 },
+        { ...fallbackDefaults, id: 'p2', title: 'Handwoven Rug', seller: { id: 's2', storeName: 'Multan Handicrafts', rating: 4.9, avatar: '' }, rating: 4.9, reviewCount: 128, price: 8900, originalPrice: 12000 },
+        { ...fallbackDefaults, id: 'p3', title: 'Wireless Earbuds', seller: { id: 's3', storeName: 'TechHub Karachi', rating: 4.6, avatar: '' }, rating: 4.6, reviewCount: 128, price: 3499, originalPrice: 4999 },
+        { ...fallbackDefaults, id: 'p4', title: 'Silver Jhumka Set', seller: { id: 's4', storeName: 'Lahore Jewels', rating: 4.7, avatar: '' }, rating: 4.7, reviewCount: 128, price: 1850, originalPrice: 2500 },
+        { ...fallbackDefaults, id: 'p5', title: 'Truck Art Mug', seller: { id: 's5', storeName: 'Peshawar Crafts', rating: 4.5, avatar: '' }, rating: 4.5, reviewCount: 128, price: 750, originalPrice: 1000 },
+        { ...fallbackDefaults, id: 'p6', title: 'Sindhi Ajrak Shawl', seller: { id: 's6', storeName: 'Hyderabad Weavers', rating: 4.9, avatar: '' }, rating: 4.9, reviewCount: 128, price: 1950, originalPrice: 2800 },
+        { ...fallbackDefaults, id: 'p7', title: 'Brass Diya Set', seller: { id: 's7', storeName: 'Islamabad Traditions', rating: 4.4, avatar: '' }, rating: 4.4, reviewCount: 128, price: 1100, originalPrice: 1500 },
+        { ...fallbackDefaults, id: 'p8', title: 'Kashmiri Dry Fruits', seller: { id: 's8', storeName: 'Gilgit Organics', rating: 4.8, avatar: '' }, rating: 4.8, reviewCount: 128, price: 2299, originalPrice: 2999 },
       ];
     }
     return base;
   }, [products]);
 
   const visibleProducts = useMemo(() => {
+    let filtered = displayedProducts;
+
+    if (activeFilter !== 'All') {
+      filtered = filtered.filter((product) => {
+        const catName = typeof product.category === 'object' && product.category ? (product.category.name || '') : '';
+        if (categories.includes(activeFilter)) {
+          return catName.toLowerCase() === activeFilter.toLowerCase()
+            || product.title.toLowerCase().includes(activeFilter.toLowerCase())
+            || product.tags?.some((t) => t.toLowerCase().includes(activeFilter.toLowerCase()));
+        }
+        switch (activeFilter) {
+          case 'Under Rs.1000': return product.price < 1000;
+          case 'Rs.1k-5k': return product.price >= 1000 && product.price <= 5000;
+          case 'Top Rated': return product.rating >= 4.7;
+          case 'New Arrivals': return product.isFeatured || true;
+          case 'Verified': return true;
+          case 'Free Delivery': return product.price >= 2000;
+          default: return true;
+        }
+      });
+    }
+
     const query = searchQuery.trim().toLowerCase();
-    if (!query) return displayedProducts;
-    return displayedProducts.filter((product) => {
-      const tags = Array.isArray((product as { tags?: string[] }).tags)
-        ? ((product as { tags?: string[] }).tags as string[])
-        : [];
-      const rawCat = (product as { category?: string | { name?: string } }).category;
-      const category =
-        typeof rawCat === 'string' ? rawCat : typeof rawCat === 'object' && rawCat ? (rawCat.name ?? '') : '';
-      return (
-        product.title.toLowerCase().includes(query) ||
-        product.seller.storeName.toLowerCase().includes(query) ||
-        category.toLowerCase().includes(query) ||
-        tags.some((tag) => tag.toLowerCase().includes(query))
-      );
-    });
-  }, [displayedProducts, searchQuery]);
+    if (query) {
+      filtered = filtered.filter((product) => {
+        const tags = product.tags || [];
+        const catName = typeof product.category === 'object' && product.category ? (product.category.name || '') : '';
+        return (
+          product.title.toLowerCase().includes(query) ||
+          product.seller.storeName.toLowerCase().includes(query) ||
+          catName.toLowerCase().includes(query) ||
+          tags.some((tag) => tag.toLowerCase().includes(query))
+        );
+      });
+    }
+
+    return filtered;
+  }, [displayedProducts, searchQuery, activeFilter]);
 
   const isLight = !isDarkMode;
   const shellBg = isLight ? 'bg-[#f7f8fa]' : 'bg-[#0d0d0d]';
@@ -139,13 +162,25 @@ export default function BuyerDashboardPage() {
 
         <section className="mt-6">
           <h2 className={`text-[18px] font-semibold ${titleColor}`}>Shop by Category</h2>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6">
-            {categories.map((cat) => (
-              <button key={cat} type="button" className={`h-[100px] rounded-xl border text-[13px] font-medium ${cardBg} ${titleColor}`}>
-                {cat}
-              </button>
-            ))}
+          <div className="marquee-wrap mt-3 overflow-hidden">
+            <div className="marquee-track flex w-max gap-3">
+              {[...categories, ...categories, ...categories, ...categories].map((cat, idx) => (
+                <button
+                  key={`${cat}-${idx}`}
+                  type="button"
+                  onClick={() => setActiveFilter(cat)}
+                  className={`h-[48px] shrink-0 rounded-xl border px-7 text-[13px] font-medium transition hover:brightness-90 ${cardBg} ${titleColor}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
+          <style>{`
+            .marquee-track { animation: marquee 20s linear infinite; }
+            .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+            @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-25%); } }
+          `}</style>
         </section>
 
         <section className="mt-8">
@@ -193,23 +228,36 @@ export default function BuyerDashboardPage() {
                     <p className={`text-[15px] font-bold ${accentText}`}>{formatPrice(product.price)}</p>
                     <p className={`text-[12px] ${faintColor}`}>{formatPrice(product.originalPrice)}</p>
                   </div>
-                  <button
-                    type="button"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      navigate(`/products/${product.id}`);
-                    }}
-                    className={`mt-3 h-9 w-full rounded-md text-[12px] font-semibold ${accentBg} ${accentBtnText}`}
-                  >
-                    Add to Cart
-                  </button>
+                  {(() => {
+                    const inCart = cartItems.some((ci) => ci.product.id === product.id);
+                    return (
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          if (inCart) {
+                            removeFromCart(product.id);
+                          } else {
+                            addToCart(product);
+                          }
+                        }}
+                        className={`mt-3 flex h-9 w-full items-center justify-center gap-1.5 rounded-md text-[12px] font-semibold transition-all ${
+                          inCart
+                            ? `${isLight ? 'bg-[#009643]' : 'bg-[#00cc66]'} ${accentBtnText}`
+                            : `${accentBg} ${accentBtnText} hover:brightness-90`
+                        }`}
+                      >
+                        {inCart ? <><Check className="h-3.5 w-3.5" /> Added to Cart</> : 'Add to Cart'}
+                      </button>
+                    );
+                  })()}
                 </div>
               </article>
             ))}
           </div>
           {!visibleProducts.length && (
             <div className={`mt-4 rounded-xl border p-6 text-center text-[13px] ${cardBg} ${subColor}`}>
-              No products match "{searchQuery}".
+              No products match {searchQuery ? `"${searchQuery}"` : `the "${activeFilter}" filter`}.
             </div>
           )}
         </section>

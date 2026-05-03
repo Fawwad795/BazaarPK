@@ -48,7 +48,7 @@ export default function RegisterPage() {
         formData.password,
         formData.role as UserRole
       );
-      navigate(formData.role === 'seller' ? '/seller/onboarding' : '/');
+      navigate(formData.role === 'seller' ? '/seller/onboarding' : '/buyer');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Could not create account.';
       setSubmitError(message.replace(/^Firebase:\s*/i, ''));

@@ -119,7 +119,7 @@ export default function BuyerOrdersPage() {
               : `No ${activeTab} orders found.`}
           </p>
           <Link
-            to="/products"
+            to="/buyer"
             className="rounded-lg bg-primary-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-primary-700"
           >
             Start Shopping
